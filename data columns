@@ -1,0 +1,44 @@
+import os
+import csv
+
+def get_max_values(filename):
+    with open(filename, 'r') as f:
+        reader = csv.reader(f)
+        header = next(reader, None)
+        if header is None:
+            return [float('nan'), float('nan'), float('nan')]
+        data = []
+        for row in reader:
+            # remove empty strings and convert to floats
+            values = [float(val) if val else float('nan') for val in row[1:]]
+            data.append(values)
+        sorted_data = sorted(data, key=lambda x: x, reverse=True)
+        max_values = [sorted_data[0][2], sorted_data[0][4], sorted_data[0][6]]
+        return max_values
+
+folder_path = r'FILE PATH'
+min_vals = []
+max_vals = []
+avg_vals = []
+
+for filename in os.listdir(folder_path):
+    if filename.endswith('.csv'):
+        file_path = os.path.join(folder_path, filename)
+        max_values = get_max_values(file_path)
+        min_vals.append(max_values[0])
+        max_vals.append(max_values[1])
+        avg_vals.append(max_values[2])
+        file_basename = os.path.splitext(filename)[0]
+        print('{}'.format(file_basename))
+
+print('\nMinimum values:')
+for min_val in min_vals:
+    print(min_val)
+
+print('\nMaximum values:')
+for max_val in max_vals:
+    print(max_val)
+
+print('\nAverage values:')
+for avg_val in avg_vals:
+    print(avg_val)
